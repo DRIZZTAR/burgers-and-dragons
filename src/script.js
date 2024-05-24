@@ -210,7 +210,7 @@ controls.target.y = 3.5;
 controls.enableDamping = true;
 
 /**
- * Renderer
+ * Render
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
