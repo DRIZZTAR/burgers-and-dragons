@@ -44,7 +44,7 @@ scene.environmentIntensity = 1;
 gui.add(scene, 'environmentIntensity').min(0).max(10).step(0.001);
 
 // HDR (RGBE) equirectangular
-rgbeLoader.load('/environmentMaps/dragonsFightingAlien.hdr', (environmentMap) => {
+rgbeLoader.load('/environmentMaps/hyrule.hdr', (environmentMap) => {
   environmentMap.mapping = THREE.EquirectangularReflectionMapping;
 
   scene.background = environmentMap;
@@ -100,7 +100,7 @@ const hamburgerScale = {
 
 let hamburger;
 
-gltfLoader.load('/models/hamburger.glb', (gltf) => {
+gltfLoader.load('/models/voxel_link.glb', (gltf) => {
   hamburger = gltf.scene;
   hamburger.scale.set(hamburgerScale.scaleX, hamburgerScale.scaleY, hamburgerScale.scaleZ);
   scene.add(hamburger);
@@ -146,14 +146,14 @@ const wallAORoughnessMetalnessTexture = textureLoader.load(
 );
 
 const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(8, 8),
-  new THREE.MeshStandardMaterial({
-    map: floorColorTexture,
-    normalMap: floorNormalTexture,
-    aoMap: floorAORoughnessMetalnessTexture,
-    roughnessMap: floorAORoughnessMetalnessTexture,
-    metalnessMap: floorAORoughnessMetalnessTexture,
-  })
+	new THREE.PlaneGeometry(8, 8),
+	new THREE.MeshStandardMaterial({
+		map: wallColorTexture,
+		normalMap: wallNormalTexture,
+		aoMap: wallAORoughnessMetalnessTexture,
+		roughnessMap: wallAORoughnessMetalnessTexture,
+		metalnessMap: wallAORoughnessMetalnessTexture,
+	})
 );
 floor.rotation.x = -Math.PI * 0.5;
 
@@ -250,12 +250,21 @@ const tick = () => {
   // Update controls
   controls.update();
 
-  if (hamburger) {
-    hamburger.rotation.x = Math.cos(Math.PI * elapsedTime * 0.2) * 0.6;
-    hamburger.rotation.y = Math.sin(Math.PI * elapsedTime) * 0.3;
+if (hamburger) {
+	const hoverAmplitude = 0.5; // Adjust hover height
+	const hoverSpeed = 0.5; // Adjust hover speed
+	const rotationSpeedX = 0.3; // Adjust rotation speed around x-axis
+	const rotationSpeedY = 0.5; // Adjust rotation speed around y-axis
 
-    hamburger.position.y = Math.sin(Math.PI * elapsedTime * 0.2) + 1.5;
-  }
+	const hoverOffset = 1.5; // Base height offset
+
+	// Smooth hovering
+	hamburger.position.y = Math.sin(Math.PI * elapsedTime * hoverSpeed) * hoverAmplitude + hoverOffset;
+
+	// Smooth rotation
+	hamburger.rotation.x = Math.cos(Math.PI * elapsedTime * rotationSpeedX) * 0.3;
+	hamburger.rotation.y = Math.sin(Math.PI * elapsedTime * rotationSpeedY) * 0.5;
+}
 
   // Render
   renderer.render(scene, camera);
